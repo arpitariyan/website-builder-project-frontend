@@ -1,11 +1,14 @@
 // src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
     timeout: 30000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 // Add auth token to requests
@@ -17,29 +20,52 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Handle response errors
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Token expired or invalid
+            localStorage.removeItem('authToken');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const apiService = {
-    // Project creation
-    createProject: (projectData) => api.post('/projects/create', projectData),
+    // Authentication
+    post: (url, data) => api.post(url, data),
+    get: (url, config) => api.get(url, config),
+    put: (url, data) => api.put(url, data),
+    patch: (url, data) => api.patch(url, data),
+    delete: (url) => api.delete(url),
 
-    // AI website generation
-    generateWebsite: (prompt, options) => api.post('/ai/generate-website', { prompt, options }),
-
-    // Figma integration
-    processFigmaLink: (figmaUrl) => api.post('/figma/process', { figmaUrl }),
-
-    // Code generation
-    buildWebsite: (projectId, config) => api.post('/build/generate', { projectId, config }),
-
-    // Project management
+    // Projects
     getProjects: () => api.get('/projects'),
-    updateProject: (projectId, data) => api.put(`/projects/${projectId}`, data),
-    deleteProject: (projectId) => api.delete(`/projects/${projectId}`),
+    getProject: (id) => api.get(`/projects/${id}`),
+    createProject: (data) => api.post('/projects/create', data),
+    updateProject: (id, data) => api.put(`/projects/${id}`, data),
+    deleteProject: (id) => api.delete(`/projects/${id}`),
+    duplicateProject: (id) => api.post(`/projects/${id}/duplicate`),
+    publishProject: (id, data) => api.post(`/projects/${id}/publish`, data),
+    downloadProject: (id) => api.get(`/projects/${id}/download`, { responseType: 'blob' }),
+    autoSaveProject: (id, content) => api.patch(`/projects/${id}/autosave`, { content }),
 
-    // API key configuration
-    configureKeys: (projectId, keys) => api.post(`/projects/${projectId}/configure-keys`, keys),
+    // Templates
+    getTemplates: (params) => api.get('/templates', { params }),
+    getTemplate: (id) => api.get(`/templates/${id}`),
+    getTemplateCategories: () => api.get('/templates/categories'),
+    getFeaturedTemplates: () => api.get('/templates/featured/list'),
 
-    // Download generated code
-    downloadProject: (projectId) => api.get(`/projects/${projectId}/download`, { responseType: 'blob' }),
+    // AI Generation
+    generateWebsite: (prompt, options) => api.post('/ai/generate-website', { prompt, options }),
+    suggestComponents: (content, context) => api.post('/ai/suggest-components', { content, context }),
+
+    // Figma Integration
+    processFigmaLink: (figmaUrl) => api.post('/figma/process', { figmaUrl }),
+    getFigmaFile: (fileId) => api.get(`/figma/file/${fileId}`),
+    convertFigmaComponent: (data) => api.post('/figma/convert', data),
 };
 
 export default api;
