@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useProject } from '../contexts/ProjectContext';
 import DashBoard from '../components/Dashboard/DashBoard';
-import CreateProject from '../components/Dashboard/CreateProject';
+import CreateProjectEnhanced from '../components/Dashboard/CreateProjectEnhanced';
 import Sidebar from '../components/UI/Sidebar';
 import { FiPlus, FiGrid, FiList } from 'react-icons/fi';
 
@@ -26,7 +26,12 @@ const DashboardPage = () => {
 
   const handleProjectCreated = (project) => {
     setShowCreateModal(false);
-    navigate(`/builder/${project._id}`);
+    navigate(`/project/${project._id}/details`);
+  };
+
+  const handleProjectDeleted = (projectId) => {
+    // Refresh the projects list after deletion
+    fetchProjects();
   };
 
   return (
@@ -96,6 +101,7 @@ const DashboardPage = () => {
                 projects={projects}
                 viewMode={viewMode}
                 onCreateProject={handleCreateProject}
+                onProjectDeleted={handleProjectDeleted}
               />
             )}
           </div>
@@ -104,7 +110,7 @@ const DashboardPage = () => {
 
       {/* Create Project Modal */}
       {showCreateModal && (
-        <CreateProject
+        <CreateProjectEnhanced
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onProjectCreated={handleProjectCreated}

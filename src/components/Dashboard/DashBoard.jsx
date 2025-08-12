@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import ProjectCard from './ProjectCard';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
-const DashBoard = ({ projects, viewMode, onCreateProject }) => {
+const DashBoard = ({ projects, viewMode, onCreateProject, onProjectDeleted }) => {
   const recentProjects = projects.slice(0, 6);
   const stats = {
     total: projects.length,
@@ -115,6 +115,7 @@ const DashBoard = ({ projects, viewMode, onCreateProject }) => {
                 project={project}
                 viewMode={viewMode}
                 index={index}
+                onProjectDeleted={onProjectDeleted}
               />
             ))}
           </div>

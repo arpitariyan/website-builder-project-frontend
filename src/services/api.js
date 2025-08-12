@@ -64,6 +64,13 @@ export const apiService = {
     generateCodeFromProject: (projectId) => api.post(`/projects/${projectId}/generate-code`),
     generateFromFigma: (projectId, data) => api.post(`/projects/${projectId}/generate-from-figma`, data),
 
+    // Enhanced Project APIs
+    createEnhancedProject: (formData) => api.post('/projects/enhanced/create', formData),
+    getProjectDetails: (projectId) => api.get(`/projects/enhanced/${projectId}/details`),
+    updateProjectDetails: (projectId, data) => api.put(`/projects/enhanced/${projectId}/details`, data),
+    generateProjectAnalysis: (projectId, options) => api.post(`/projects/enhanced/${projectId}/analyze`, options),
+    generateEnhancedCode: (projectId, options) => api.post(`/projects/enhanced/${projectId}/generate-code`, options),
+
     // Figma Integration
     processFigmaLink: (figmaUrl) => api.post('/figma/process', { figmaUrl }),
     getFigmaFile: (fileId) => api.get(`/figma/file/${fileId}`),

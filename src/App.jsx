@@ -10,6 +10,9 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import BuilderPage from './pages/BuilderPage';
 import TemplatesPage from './pages/TemplatesPage';
+import EnhancedBuilderPage from './pages/EnhancedBuilderPage';
+import ProjectDetailsPage from './pages/ProjectDetailsPage';
+import PreviewPage from './pages/PreviewPage';
 import './App.css';
 
 function App() {
@@ -48,6 +51,28 @@ function App() {
                     <BuilderPage />
                   </ProtectedRoute>
                 } 
+              />
+              <Route 
+                path="/enhanced-builder/:projectId" 
+                element={
+                  <ProtectedRoute>
+                    <EnhancedBuilderPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/project/:projectId/details" 
+                element={
+                  <ProtectedRoute>
+                    <ProjectDetailsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Preview route - can be accessed without authentication for sharing */}
+              <Route 
+                path="/preview/:projectId" 
+                element={<PreviewPage />} 
               />
               
               {/* Redirect unknown routes */}
