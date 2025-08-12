@@ -61,6 +61,8 @@ export const apiService = {
     // AI Generation
     generateWebsite: (prompt, options) => api.post('/ai/generate-website', { prompt, options }),
     suggestComponents: (content, context) => api.post('/ai/suggest-components', { content, context }),
+    generateCodeFromProject: (projectId) => api.post(`/projects/${projectId}/generate-code`),
+    generateFromFigma: (projectId, data) => api.post(`/projects/${projectId}/generate-from-figma`, data),
 
     // Figma Integration
     processFigmaLink: (figmaUrl) => api.post('/figma/process', { figmaUrl }),
@@ -69,3 +71,10 @@ export const apiService = {
 };
 
 export default api;
+
+// Named exports for specific functions
+export const generateCodeFromProject = (projectId) => 
+    apiService.generateCodeFromProject(projectId).then(res => res.data);
+
+export const generateFromFigma = (projectId, data) => 
+    apiService.generateFromFigma(projectId, data).then(res => res.data);

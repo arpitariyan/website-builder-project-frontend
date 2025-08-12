@@ -1,4 +1,4 @@
-// src/components/UI/Sidebar.jsx
+// src/components/Sidebar.jsx
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -167,6 +167,62 @@ const Sidebar = () => {
         onClose={() => setShowSettings(false)} 
       />
     </>
+  );
+};
+
+export default Sidebar;
+                    isActive
+                      ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">
+                      {item.name}
+                    </div>
+                    <div className="text-xs opacity-75">
+                      {item.description}
+                    </div>
+                  </div>
+                  
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebar-active"
+                      className="w-1 h-6 bg-primary-600 rounded-full"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {/* Bottom Actions */}
+      <div className="p-4 border-t border-gray-200 space-y-2">
+        <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-all duration-200">
+          <FiHelpCircle className="w-5 h-5 text-gray-400" />
+          <span className="text-sm font-medium">Help & Support</span>
+        </button>
+        
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+        >
+          <FiLogOut className="w-5 h-5" />
+          <span className="text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
+
+      {/* Version Info */}
+      <div className="p-4 text-center">
+        <p className="text-xs text-gray-400">Version 1.0.0</p>
+      </div>
+    </div>
   );
 };
 

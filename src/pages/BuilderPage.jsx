@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProject } from '../contexts/ProjectContext';
 import { useAuth } from '../contexts/AuthContext';
-import ProjectBuilder from '../components/Builder/ProjectBuilder';
+import EnhancedProjectBuilder from '../components/Builder/EnhancedProjectBuilder';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import { FiArrowLeft, FiSave, FiEye, FiDownload, FiShare2 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
@@ -183,7 +183,7 @@ const BuilderPage = () => {
 
       {/* Builder Interface */}
       <div className="flex-1 flex overflow-hidden">
-        <ProjectBuilder 
+        <EnhancedProjectBuilder 
           project={currentProject}
           onProjectChange={(updatedProject) => {
             setHasUnsavedChanges(true);
