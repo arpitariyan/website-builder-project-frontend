@@ -398,7 +398,7 @@ const ProjectDetailsPage = () => {
                 {/* Generate Code */}
                 {project.aiAnalysis && (
                   <button
-                    onClick={handleCodeGeneration}
+                    onClick={() => navigate(`/enhanced-builder/${projectId}`)}
                     disabled={generating || !project.aiAnalysis.generatedPrompt}
                     className="w-full flex items-center gap-3 px-4 py-3 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors disabled:opacity-50"
                   >

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useProject } from '../contexts/ProjectContext';
 import DashBoard from '../components/Dashboard/DashBoard';
-import CreateProjectEnhanced from '../components/Dashboard/CreateProjectEnhanced';
+import CreateProjectAdvanced from '../components/Dashboard/CreateProjectAdvanced';
 import Sidebar from '../components/UI/Sidebar';
 import { FiPlus, FiGrid, FiList } from 'react-icons/fi';
 
@@ -110,7 +110,7 @@ const DashboardPage = () => {
 
       {/* Create Project Modal */}
       {showCreateModal && (
-        <CreateProjectEnhanced
+        <CreateProjectAdvanced
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onProjectCreated={handleProjectCreated}

@@ -1,6 +1,6 @@
 // src/components/Builder/CodePreview.jsx
 import React, { useState, useEffect } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import Editor from '@monaco-editor/react';
 import { motion } from 'framer-motion';
 import { FiCopy, FiDownload, FiPlay, FiRefreshCw } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
@@ -129,7 +129,7 @@ const CodePreview = ({ project, generatedCode, onCodeChange, isGenerating }) => 
 
       {/* Code Editor */}
       <div className="flex-1">
-        <MonacoEditor
+        <Editor
           language={tabs.find(tab => tab.id === activeTab)?.language || 'html'}
           theme="vs-dark"
           value={codeContent[activeTab]}

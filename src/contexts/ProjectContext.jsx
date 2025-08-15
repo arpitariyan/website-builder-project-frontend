@@ -130,14 +130,25 @@ export const ProjectProvider = ({ children }) => {
   const createProject = useCallback(async (projectData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      const response = await apiService.post('/projects/create', projectData);
+      // Handle both FormData and regular objects
+      const isFormData = projectData instanceof FormData;
+      const endpoint = isFormData ? '/projects/enhanced/create' : '/projects/create';
+      
+      const config = isFormData ? {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      } : {};
+      
+      const response = await apiService.post(endpoint, projectData, config);
       dispatch({ type: 'ADD_PROJECT', payload: response.data.project });
       toast.success('Project created successfully!');
       return response.data.project;
     } catch (error) {
       console.error('Failed to create project:', error);
       dispatch({ type: 'SET_ERROR', payload: 'Failed to create project' });
-      toast.error('Failed to create project');
+      const errorMessage = error.response?.data?.error || 'Failed to create project';
+      toast.error(errorMessage);
       throw error;
     }
   }, []);
