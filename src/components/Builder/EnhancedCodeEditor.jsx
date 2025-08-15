@@ -1,5 +1,5 @@
 // src/components/Builder/EnhancedCodeEditor.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { motion } from 'framer-motion';
 import Split from 'react-split';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import {
   FiSearch, FiGitBranch, FiPackage, FiArrowLeft,
   FiHome, FiUpload, FiShare, FiZap,
   FiEdit, FiCommand, FiMenu, FiX, FiChevronRight,
-  FiChevronDown, FiFileText, FiActivity, FiCheck
+  FiChevronDown, FiFileText, FiActivity, FiCheck, FiAlertTriangle
 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import { apiService } from '../../services/api';
@@ -29,7 +29,7 @@ import {
 // Monaco Editor for syntax highlighting
 import Editor from '@monaco-editor/react';
 
-const EnhancedCodeEditor = ({ project, onProjectChange }) => {
+const EnhancedCodeEditor = forwardRef(({ project, onProjectChange }, ref) => {
   const navigate = useNavigate();
   const [activeFile, setActiveFile] = useState('index.html');
   const [files, setFiles] = useState({});
@@ -53,6 +53,16 @@ const EnhancedCodeEditor = ({ project, onProjectChange }) => {
   const previewRef = useRef(null);
   const editorRef = useRef(null);
   const terminalRef = useRef(null);
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    saveCurrentFile: () => saveFile(),
+    getCurrentFile: () => activeFile,
+    getFiles: () => files,
+    setActiveFile: (filePath) => setActiveFile(filePath),
+    refreshPreview: () => updatePreview(),
+    getEditorInstance: () => editorRef.current
+  }));
 
   useEffect(() => {
     if (project) {
@@ -809,7 +819,7 @@ const EnhancedCodeEditor = ({ project, onProjectChange }) => {
                     showProblems ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'
                   }`}
                 >
-                  <FiBug className="w-4 h-4 inline mr-1" />
+                  <FiAlertTriangle className="w-4 h-4 inline mr-1" />
                   Problems ({problems.length})
                 </button>
                 
@@ -850,7 +860,7 @@ const EnhancedCodeEditor = ({ project, onProjectChange }) => {
                     ) : (
                       problems.map((problem, index) => (
                         <div key={index} className="flex items-start gap-2 p-2 bg-red-50 rounded">
-                          <FiBug className="w-4 h-4 text-red-500 mt-0.5" />
+                          <FiAlertTriangle className="w-4 h-4 text-red-500 mt-0.5" />
                           <div>
                             <div className="text-sm font-medium text-red-900">{problem.message}</div>
                             <div className="text-xs text-red-600">{problem.file}:{problem.line}</div>
@@ -867,6 +877,8 @@ const EnhancedCodeEditor = ({ project, onProjectChange }) => {
       </div>
     </div>
   );
-};
+});
+
+EnhancedCodeEditor.displayName = 'EnhancedCodeEditor';
 
 export default EnhancedCodeEditor;
