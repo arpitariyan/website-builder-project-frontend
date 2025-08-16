@@ -37,17 +37,9 @@ const EnhancedCodeEditor = forwardRef(({ project, onProjectChange }, ref) => {
     
     try {
       setSaving(true);
-      
-      // Get current content from editor
-      const currentContent = files[activeFile] || '';
-      
-      // Call the parent's save function which handles both database and file system
       const updatedProject = {
         ...project,
-        content: {
-          ...project.content,
-          [activeFile]: currentContent
-        }
+        content: files
       };
       
       if (onProjectChange) {

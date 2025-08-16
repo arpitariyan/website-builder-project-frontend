@@ -647,38 +647,22 @@ Generate code that combines the user requirements with best practices from the A
     try {
       setSaving(true);
       
-      // Save file using enhanced API
-      const response = await apiService.saveFileContent(
-        projectId, 
-        filePath, 
-        content, 
-        true // Always save to file system for enhanced functionality
-      );
+      // Save file using existing API
+      const response = await apiService.post(`/enhanced-projects/${projectId}/workspace/file`, {
+        filePath,
+        content
+      });
       
-      if (response.data.success) {
-        // Update local state
-        setActiveFiles(prev => ({
-          ...prev,
-          [filePath]: {
-            ...prev[filePath],
-            content
-          }
-        }));
-        
-        // Update project content
-        const updatedProject = {
-          ...project,
-          content: {
-            ...project.content,
-            [filePath]: content
-          },
-          lastSaved: new Date()
-        };
-        
-        setProject(updatedProject);
-        
-        toast.success('File saved to database and file system');
-      }
+      // Update local state
+      setActiveFiles(prev => ({
+        ...prev,
+        [filePath]: {
+          ...prev[filePath],
+          content
+        }
+      }));
+      
+      toast.success('File saved successfully');
     } catch (error) {
       console.error('Failed to save file:', error);
       toast.error('Failed to save file');
@@ -790,33 +774,16 @@ Generate code that combines the user requirements with best practices from the A
       try {
         setSaving(true);
         
-        // Prepare content object from active files
-        const contentToSave = {};
-        Object.entries(activeFiles).forEach(([filePath, fileData]) => {
-          contentToSave[filePath] = fileData.content;
-        });
-        
-        // Save all content using enhanced API
-        const response = await apiService.saveProjectContent(
-          projectId, 
-          contentToSave, 
-          true // Save to file system
-        );
-        
-        if (response.data.success) {
-          // Update project state
-          const updatedProject = {
-            ...project,
-            content: contentToSave,
-            lastSaved: new Date()
-          };
-          
-          setProject(updatedProject);
-          
-          toast.success('All files saved to database and file system');
+        // Save all files individually
+        for (const [filePath, fileData] of Object.entries(activeFiles)) {
+          await apiService.post(`/enhanced-projects/${projectId}/workspace/file`, {
+            filePath,
+            content: fileData.content
+          });
         }
+        
+        toast.success('All files saved');
       } catch (error) {
-        console.error('Failed to save all files:', error);
         toast.error('Failed to save all files');
       } finally {
         setSaving(false);
@@ -867,18 +834,12 @@ Generate code that combines the user requirements with best practices from the A
     // Preview menu
     previewProject: async () => {
       try {
-        // First ensure all files are saved
-        await menuActions.saveAll();
+        // Generate preview using existing API
+        const response = await apiService.post(`/enhanced-projects/${projectId}/build`);
         
-        // Get preview URL
-        const response = await apiService.getPreviewUrl(projectId);
-        
-        if (response.data.success && response.data.previewUrl) {
-          // Open preview in new tab
+        if (response.data.previewUrl) {
           window.open(response.data.previewUrl, '_blank');
           toast.success('Preview opened in new tab');
-        } else if (!response.data.hasFileSystem) {
-          toast.error('Please save project files first to enable preview');
         } else {
           toast.error('Failed to generate preview');
         }
@@ -890,16 +851,12 @@ Generate code that combines the user requirements with best practices from the A
     
     openLivePreview: async () => {
       try {
-        // Get live preview URL
-        const response = await apiService.getPreviewUrl(projectId);
+        // Start dev server for live preview
+        const response = await apiService.post(`/enhanced-projects/${projectId}/dev`);
         
-        if (response.data.success && response.data.livePreviewUrl) {
-          window.open(response.data.livePreviewUrl, '_blank');
-          toast.success('Live preview opened with hot reload');
-        } else if (!response.data.hasFileSystem) {
-          toast.error('Please save project files first to enable live preview');
-        } else {
-          toast.error('Failed to get live preview URL');
+        if (response.data.devUrl) {
+          window.open(response.data.devUrl, '_blank');
+          toast.success('Live preview started');
         }
       } catch (error) {
         console.error('Live preview failed:', error);

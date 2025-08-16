@@ -70,15 +70,6 @@ export const apiService = {
     updateProjectDetails: (projectId, data) => api.put(`/enhanced-projects/${projectId}/details`, data),
     generateProjectAnalysis: (projectId, options) => api.post(`/enhanced-projects/${projectId}/analyze`, options),
     generateEnhancedCode: (projectId, options) => api.post(`/enhanced-projects/${projectId}/generate-code`, options),
-    
-    // Enhanced save functionality
-    saveProjectContent: (projectId, content, saveToFileSystem = false) => 
-        api.post(`/enhanced-projects/${projectId}/save-content`, { content, saveToFileSystem }),
-    saveFileContent: (projectId, fileName, content, saveToFileSystem = false) => 
-        api.post(`/enhanced-projects/${projectId}/save-file`, { fileName, content, saveToFileSystem }),
-    
-    // Preview functionality
-    getPreviewUrl: (projectId) => api.get(`/enhanced-projects/${projectId}/preview-url`),
 
     // Figma Integration
     processFigmaLink: (figmaUrl) => api.post('/figma/process', { figmaUrl }),
