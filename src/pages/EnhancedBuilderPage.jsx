@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 // import { 
-//   FiCode, FiTerminal, FiFolder, FiFile, FiSave, FiPlay, FiStop,
+//   FiCode, FiTerminal, FiFolder, FiFile, FiSave, FiPlay,
 //   FiSettings, FiSearch, FiHome, FiDownload, FiUpload, FiRefreshCw,
 //   FiMaximize2, FiMinimize2, FiMoreHorizontal, FiX, FiPlus,
 //   FiChevronRight, FiChevronDown, FiEdit3, FiTrash2, FiCopy,
@@ -477,7 +477,7 @@ Generate code that combines the user requirements with best practices from the A
       });
 
       socketConnection.on('connect', () => {
-        console.log('WebSocket connected');
+        // console.log('WebSocket connected');
         setConnected(true);
         
         // Authenticate with project
